@@ -6,9 +6,7 @@ import (
 	"log"
 )
 
-var rootCmd = &cobra.Command{
-
-}
+var rootCmd = &cobra.Command{}
 
 func main() {
 	commands.NewCommand(rootCmd)

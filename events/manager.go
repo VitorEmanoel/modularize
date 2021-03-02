@@ -41,7 +41,7 @@ func (e *eventManagerContext) CallEvent(event string, args ...interface{}) error
 		if method.FuncType.NumIn() > len(methodValues) {
 			return MissingMethodArgs
 		}
-		method.FuncValue.Call(methodValues)
+		go method.FuncValue.Call(methodValues)
 	}
 	return nil
 }

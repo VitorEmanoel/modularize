@@ -5,26 +5,29 @@ import (
 	"path/filepath"
 )
 
-type PluginManager interface {
+type PluginLoader interface {
 	LoadFile(file string) Plugin
 	LoadFolder(folder string) []Plugin
 }
 
-type PluginManagerContext struct {
+type PluginLoaderContext struct {
 
 }
 
-func (p *PluginManagerContext) LoadFile(file string) Plugin {
+func (p *PluginLoaderContext) LoadFile(file string) Plugin {
 	return NewPlugin(file)
 }
 
-func (p *PluginManagerContext) LoadFolder(folder string) []Plugin {
+func (p *PluginLoaderContext) LoadFolder(folder string) []Plugin {
 	var plugins []Plugin
 	err := filepath.Walk(folder, func(path string, info os.FileInfo, err error) error {
 		if err != nil {
 			return err
 		}
 		if info.IsDir() {
+			return nil
+		}
+		if filepath.Ext(info.Name()) != ".so" {
 			return nil
 		}
 		plugins = append(plugins, NewPlugin(path))
@@ -36,6 +39,6 @@ func (p *PluginManagerContext) LoadFolder(folder string) []Plugin {
 	return plugins
 }
 
-func NewPluginManager() PluginManager {
-	return &PluginManagerContext{}
+func NewPluginLoader() PluginLoader {
+	return &PluginLoaderContext{}
 }
